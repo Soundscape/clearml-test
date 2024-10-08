@@ -4,3 +4,4 @@ torchvision==0.19.1+cpu
 absl-py==2.1.0
 python-dotenv==1.0.1
 lightning==2.4.0
+clearml==1.16.4
