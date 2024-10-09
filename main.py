@@ -1,4 +1,5 @@
 import os
+from clearml import Task
 import dotenv
 import sys
 import warnings
@@ -43,14 +44,13 @@ class LitAutoEncoder(L.LightningModule):
 
 
 def main(argv):
-    print(argv)
     del argv  # Unused.
 
     dotenv.load_dotenv()
     logging.info("ClearML Test - Training")
     logging.info("Running under Python {0[0]}.{0[1]}.{0[2]}".format(sys.version_info))
 
-    task = Task.init(project_name="clearml_test", task_name="remote_test")
+    Task.init(project_name="clearml_test", task_name="remote_test")
     
     encoder = nn.Sequential(nn.Linear(28 * 28, 64), nn.ReLU(), nn.Linear(64, 3))
     decoder = nn.Sequential(nn.Linear(3, 64), nn.ReLU(), nn.Linear(64, 28 * 28))
@@ -60,7 +60,7 @@ def main(argv):
     dataset = MNIST(os.getcwd(), download=True, transform=ToTensor())
     train_loader = DataLoader(dataset)
 
-    trainer = L.Trainer(logger=task.get_logger(), limit_train_batches=100, max_epochs=10)
+    trainer = L.Trainer(limit_train_batches=100, max_epochs=10)
     trainer.fit(model=autoencoder, train_dataloaders=train_loader)
 
 
